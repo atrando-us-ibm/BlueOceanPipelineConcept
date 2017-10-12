@@ -8,19 +8,37 @@ pipeline {
 '''
       }
     }
-    stage('Execute testcase on remote appliance') {
-      steps {
-        sh '''echo "=========================================================="
+    stage('Execute Testcase Too') {
+      parallel {
+        stage('Execute testcase on remote appliance') {
+          steps {
+            sh '''echo "=========================================================="
 echo "[###] Execute testcase on remote appliance (via SSH) [###]"
 echo "=========================================================="
 
 ssh s27app "cd /root/fpcConfigTest; ./test_vlan_position_in_fpcConfig_file.sh"
 '''
+          }
+        }
+        stage('Testcase2') {
+          steps {
+            ws(dir: 'Build') {
+              sh '''echo "=========================================================="
+echo "[###] Execute testcase on remote appliance (via SSH) [###]"
+echo "=========================================================="
+
+ssh mclinx "pwd; ls -lahF"
+'''
+            }
+            
+          }
+        }
       }
     }
     stage('Collect Output Files') {
       steps {
-        sh '''echo "==================================================="
+        ws(dir: 'Second') {
+          sh '''echo "==================================================="
 echo "[###] The test generates some output files.         "
 echo "      Zip them up and copy them to workspace: [###]"
 echo "==================================================="
@@ -29,8 +47,10 @@ ssh s27app "cd /root/fpcConfigTest/test_results; tar -cvf ../fpc_config_test_res
 
 scp s27app:/root/fpcConfigTest/fpc_config_test_results.tgz .
 '''
-        sh '''# Extract files from the archive
+          sh '''# Extract files from the archive
 tar -xvf fpc_config_test_results.tgz'''
+        }
+        
       }
     }
     stage('DONE') {
