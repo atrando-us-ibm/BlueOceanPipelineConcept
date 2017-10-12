@@ -18,7 +18,7 @@ ssh s27app "cd /root/fpcConfigTest; ./test_vlan_position_in_fpcConfig_file.sh"
 '''
       }
     }
-    stage('Zip Output Files') {
+    stage('Collect Output Files') {
       steps {
         sh '''echo "==================================================="
 echo "[###] The test generates some output files.         "
@@ -29,13 +29,8 @@ ssh s27app "cd /root/fpcConfigTest/test_results; tar -cvf ../fpc_config_test_res
 
 scp s27app:/root/fpcConfigTest/fpc_config_test_results.tgz .
 '''
-      }
-    }
-    stage('Extract files from the archive') {
-      steps {
         sh '''# Extract files from the archive
-tar -xvf fpc_config_test_results.tgz
-'''
+tar -xvf fpc_config_test_results.tgz'''
       }
     }
     stage('DONE') {
