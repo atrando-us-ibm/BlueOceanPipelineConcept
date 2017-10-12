@@ -9,35 +9,18 @@ pipeline {
       }
     }
     stage('Execute Testcase Too') {
-      parallel {
-        stage('Execute testcase on remote appliance') {
-          steps {
-            sh '''echo "=========================================================="
+      steps {
+        sh '''echo "=========================================================="
 echo "[###] Execute testcase on remote appliance (via SSH) [###]"
 echo "=========================================================="
 
 ssh s27app "cd /root/fpcConfigTest; ./test_vlan_position_in_fpcConfig_file.sh"
 '''
-          }
-        }
-        stage('Testcase2') {
-          steps {
-            ws(dir: 'Build') {
-              sh '''echo "=========================================================="
-echo "[###] Execute testcase on remote appliance (via SSH) [###]"
-echo "=========================================================="
-
-ssh mclinx "pwd; ls -lahF"
-'''
-            }
-            
-          }
-        }
       }
     }
     stage('Collect Output Files') {
       steps {
-        ws(dir: 'Second') {
+        ws(dir: 'Test Output Files') {
           sh '''echo "==================================================="
 echo "[###] The test generates some output files.         "
 echo "      Zip them up and copy them to workspace: [###]"
