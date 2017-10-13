@@ -4,7 +4,9 @@ pipeline {
     stage('Pull down config files') {
       steps {
         echo 'Grabbing Config Files from server'
-        sh '''scp s27app:~/fpcConfigTest/fpcConfigTest.tgz . || echo "archive not found... proceeding"
+        sh '''# scp s27app:~/fpcConfigTest/fpcConfigTest.tgz . || echo "archive not found... proceeding"
+
+echo "archive not found... proceeding"
 '''
       }
     }
