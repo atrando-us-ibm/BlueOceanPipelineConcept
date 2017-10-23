@@ -40,7 +40,7 @@ tar -xvf fpc_config_test_results.tgz'''
     stage('Run Tests') {
       steps {
         sh '''echo "running test on testcase outputs:"
-python test_ipaddr.py'''
+pytest test_ipaddr.py'''
       }
     }
     stage('End') {
