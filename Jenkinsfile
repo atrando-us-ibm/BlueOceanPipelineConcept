@@ -4,7 +4,9 @@ pipeline {
     stage('Pull down config files') {
       steps {
         echo 'Grabbing Config Files from server'
-        sh 'scp s27app:~/fpcConfigTest.tgz . || echo "archive not found... proceeding"'
+        sh '''scp s27app:~/fpcConfigTest.tgz . || echo "archive not found... proceeding"
+scp s27app:~/fpcConfigTest/test_results/test_ipaddr.py . || echo "could not retrieve test suite"
+'''
       }
     }
     stage('Execute Testcase Too') {
@@ -35,7 +37,13 @@ tar -xvf fpc_config_test_results.tgz'''
         
       }
     }
-    stage('DONE') {
+    stage('Run Tests') {
+      steps {
+        sh '''echo "running test on testcase outputs:"
+python test_ipaddr.py'''
+      }
+    }
+    stage('End') {
       steps {
         echo 'Process Complete'
       }
